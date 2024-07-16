@@ -2,6 +2,9 @@
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Metaplex, PublicKey, keypairIdentity, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { publicKey } from '@metaplex-foundation/umi';
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
 
 // Wallet
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -39,10 +42,25 @@ export const MyNFTsView: FC = ({ }) => {
         // const b = await metaplex.nfts().findAllByOwner("")
         const tokenAccountPublicKey = new PublicKey(TOKEN_ACCOUNT)
         // getTokenAccountBalance
-        const val = await connection.getTokenAccountBalance(tokenAccountPublicKey)
-        // const val = await connection.getTokenAccountsByOwner(wallet.adapter.publicKey, { mint: wallet.adapter.publicKey })
-        console.log('IN MY NFTS - val => ' , val)
+
+        // const val = await connection.getTokenAccountBalance(tokenAccountPublicKey)
+        // const val2 = await connection.getTokenAccountsByOwner(wallet.adapter.publicKey, { mint: tokenAccountPublicKey })
+        // console.log('IN MY NFTS - val => ' , val)
+        // console.log('IN MY NFTS - val2 => ' , val2)
         // console.log('IN MY NFTS - metaplex => ' , metaplex.nfts().getBalance())
+
+        const umi = createUmi('https://api.devnet.solana.com').use(dasApi());
+        const owner = publicKey(wallet.adapter.publicKey);
+
+        const assets = await umi.rpc.getAssetsByOwner({
+            owner,
+            limit: 10
+        });
+
+        console.log(assets.items.length > 0);
+        console.log(assets.items);
+
+
         // setRemaining(candyMachine.itemsRemaining.toNumber());
         // const priceInBasisPoints = candyMachine.candyGuard.guards.solPayment.amount.basisPoints.toNumber();
         // setPrice(priceInBasisPoints/1000000000)
