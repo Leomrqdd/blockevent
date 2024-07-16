@@ -9,8 +9,8 @@ const SOLANA_CONNECTION = new Connection(REACT_APP_RPC_URL, { commitment: 'final
 const secret = JSON.parse(await readFile(new URL('./my-wallet.json', import.meta.url)));
 const WALLET = Keypair.fromSecretKey(new Uint8Array(secret));
 const NFT_METADATA = 'https://arweave.net/p5-KcvElq76IHyHukVcKGo_y1vM5C7asQowUhfn_0Xs'; 
-const COLLECTION_NFT_MINT = 'CmwZNwE1vp9FRkQoRhaFNDCgzX19tpaP9H6XSji9idLm'; 
-const CANDY_MACHINE_ID = 'HPuaPjVLWM9CnNLoMuTcfSt6Mra29F1UP3dwkaXgKDmD';
+const COLLECTION_NFT_MINT = 'CSkWpXLch5xxN3s4mDDNKwLWA5zXrDVsFPLN1XYHt3f1'; 
+const CANDY_MACHINE_ID = 'GFL2Q47XzJxZedjm6Dskdhviw82c73AxPh8epcbgaZtz';
 const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
     .use(keypairIdentity(WALLET));
 
@@ -34,7 +34,7 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 // async function generateCandyMachine() {
 //     const candyMachineSettings =
 //         {
-//             itemsAvailable: toBigNumber(3), // Collection Size: 3
+//             itemsAvailable: toBigNumber(50), // Collection Size: 50
 //             sellerFeeBasisPoints: 500, // 5% Royalties on Collection
 //             symbol: "VC",
 //             maxEditionSupply: toBigNumber(0), // 0 reproductions of each NFT allowed
@@ -66,10 +66,10 @@ const METAPLEX = Metaplex.make(SOLANA_CONNECTION)
 //             // startDate: { date: toDateTime("2022-10-17T16:00:00Z") },
 //             mintLimit: {
 //                 id: 1,
-//                 limit: 2,
+//                 limit: 10,
 //             },
 //             solPayment: {
-//                 amount: sol(0.1),
+//                 amount: sol(0.2),
 //                 destination: new PublicKey('GSSZFXo6SmU5ENTjMbxu2nZMcP24vjfo96VfiRSC1Z8w'), //my wallet on Phantom
 //             },
 //         }
@@ -88,7 +88,7 @@ async function addItems() {
         .candyMachines()
         .findByAddress({ address: new PublicKey(CANDY_MACHINE_ID) }); 
     const items = [];
-    for (let i = 0; i < 3; i++ ) { // Add 3 NFTs (the size of our collection)
+    for (let i = 0; i < 10; i++ ) { // Add 10 NFTs (batch of 10, maximum supply 50)
         items.push({
             name: `Tickets # ${i+1}`,
             uri: NFT_METADATA
