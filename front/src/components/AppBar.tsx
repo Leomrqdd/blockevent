@@ -1,19 +1,44 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import React, { useState } from "react";
 import { useAutoConnect } from '../contexts/AutoConnectProvider';
 import NetworkSwitcher from './NetworkSwitcher';
 import NavElement from './nav-element';
+import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const WalletMultiButtonDynamic = dynamic(
   async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
   { ssr: false }
 );
 
+export async function getSolanaBalance(publicKey: string): Promise<number> {
+  const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+  const balanceInLamports = await connection.getBalance(new PublicKey(publicKey));
+  const balanceInSol = balanceInLamports / LAMPORTS_PER_SOL;
+
+  return balanceInSol;
+}
+
+
 export const AppBar: React.FC = () => {
   const { autoConnect, setAutoConnect } = useAutoConnect();
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [solanaBalance, setSolanaBalance] = useState(null);
+  const {wallet, publicKey } = useWallet();
+
+  useEffect(() => {
+    if (publicKey) {
+      getSolanaBalance(publicKey.toBase58())
+        .then((balance) => setSolanaBalance(balance));
+    } else {
+      setSolanaBalance(null);
+    }
+  }, [publicKey,wallet]);
+
+
+  
   return (
     <div>
       {/* NavBar / Header */}
@@ -66,7 +91,8 @@ export const AppBar: React.FC = () => {
             href="/basics"
             navigationStarts={() => setIsNavOpen(false)}
           />
-          <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg mr-6 " />
+          <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg mr-1 " />
+          <div className="btn-ghost btn-sm rounded-btn text-lg mr-6 " >{solanaBalance !== null ? `${solanaBalance.toFixed(2)} SOL` : 'Balance not available'}</div>
         </div>
           <label
               htmlFor="my-drawer"
