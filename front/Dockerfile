@@ -6,4 +6,3 @@ COPY . .
 RUN yarn install --force
 RUN yarn build
 CMD [ "yarn", "start" ]
-
