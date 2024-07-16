@@ -1,15 +1,8 @@
-FROM node:12-alpine
-
-WORKDIR /opt/app
-
+FROM node:22
+WORKDIR /app
 ENV NODE_ENV production
-
 COPY package*.json ./
-
-RUN npm ci 
-
-COPY . /opt/app
-
-RUN npm install --dev && npm run build
-
-CMD [ "npm", "start" ]
+COPY . .
+RUN yarn install --force
+RUN yarn build
+CMD [ "yarn", "start" ]
