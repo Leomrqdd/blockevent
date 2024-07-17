@@ -16,7 +16,6 @@ const MintButton = () => {
   const { connection } = useConnection();
   const [metaplex, setMetaplex] = useState(null);
 
-  // const METAPLEX = Metaplex.make(connection).use(walletAdapterIdentity(wallet.adapter));
 
   const isWalletConnected = publicKey !== null && publicKey !== undefined;
 

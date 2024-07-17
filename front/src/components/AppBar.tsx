@@ -30,13 +30,25 @@ export const AppBar: React.FC = () => {
 
   useEffect(() => {
     if (publicKey) {
+      const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
       getSolanaBalance(publicKey.toBase58())
         .then((balance) => setSolanaBalance(balance));
-    } else {
-      setSolanaBalance(null);
-    }
-  }, [publicKey,wallet]);
-
+       
+      const subscriptionId = connection.onAccountChange(
+          publicKey,
+          async () => {
+            const balance = await getSolanaBalance(publicKey.toBase58());
+            setSolanaBalance(balance);
+          }
+        );
+        return () => {
+          connection.removeAccountChangeListener(subscriptionId);
+        };
+      } else {
+        setSolanaBalance(null);
+      }
+    }, [publicKey]);
+  
 
   
   return (

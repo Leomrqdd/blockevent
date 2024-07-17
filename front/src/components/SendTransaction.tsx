@@ -1,11 +1,13 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Keypair, SystemProgram, Transaction, TransactionMessage, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
-import { FC, useCallback } from 'react';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionMessage, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
+import { FC, useCallback, useState } from 'react';
 import { notify } from "../utils/notifications";
 
 export const SendTransaction: FC = () => {
     const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
+    const TREASURY = 'GSSZFXo6SmU5ENTjMbxu2nZMcP24vjfo96VfiRSC1Z8w';
+    const [donationAmount, setDonationAmount] = useState(0.1);
 
     const onClick = useCallback(async () => {
         if (!publicKey) {
@@ -18,11 +20,12 @@ export const SendTransaction: FC = () => {
         try {
 
             // Create instructions to send, in this case a simple transfer
+            const lamports = donationAmount * LAMPORTS_PER_SOL;
             const instructions = [
                 SystemProgram.transfer({
                     fromPubkey: publicKey,
-                    toPubkey: Keypair.generate().publicKey,
-                    lamports: 1_000_000,
+                    toPubkey: new PublicKey(TREASURY),
+                    lamports: lamports,
                 }),
             ];
 
@@ -59,6 +62,14 @@ export const SendTransaction: FC = () => {
             <div className="relative group items-center">
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                 rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                    <input
+                    type = "number"
+                    value = {donationAmount}
+                    onChange={(e) => setDonationAmount(Number(e.target.value))}
+                    placeholder="Enter amount in SOL"
+                    step="0.1" 
+                    className="group w-60 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                    />
                     <button
                         className="group w-60 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                         onClick={onClick} disabled={!publicKey}
@@ -67,7 +78,7 @@ export const SendTransaction: FC = () => {
                         Wallet not connected
                         </div>
                          <span className="block group-disabled:hidden" >
-                            Send Transaction
+                            Make a donation of {donationAmount} SOL
                         </span>
                     </button>
              </div>
