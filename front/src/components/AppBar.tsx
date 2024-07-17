@@ -103,6 +103,11 @@ export const AppBar: React.FC = () => {
             href="/basics"
             navigationStarts={() => setIsNavOpen(false)}
           />
+          <NavElement
+            label="My NFTs"
+            href="/myNfts"
+            navigationStarts={() => setIsNavOpen(false)}
+          />
           <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg mr-1 " />
           <div className="btn-ghost btn-sm rounded-btn text-lg mr-6 " >{solanaBalance !== null ? `${solanaBalance.toFixed(2)} SOL` : 'Balance not available'}</div>
         </div>

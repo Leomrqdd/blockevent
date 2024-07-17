@@ -1,20 +1,20 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { BasicsView } from "../views";
+import { MyNFTsView } from "../views";
 
-const Basics: NextPage = (props) => {
+const MyNFTs: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>Basics</title>
+        <title>My NFTS</title>
         <meta
           name="description"
           content="Basic Functionality"
         />
       </Head>
-      <BasicsView />
+      <MyNFTsView />
     </div>
   );
 };
 
-export default Basics;
+export default MyNFTs;
