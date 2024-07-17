@@ -30,3 +30,16 @@ jobs:
           context: ./front
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/blockevent:develop
+
+      - name: SSH into VM and run Docker Compose commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /docker/src
+            docker compose pull
+            docker compose up -d
+            docker system prune -f
