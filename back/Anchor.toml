@@ -7,6 +7,9 @@ skip-lint = false
 [programs.localnet]
 mint_spl_29 = "5wrfmBvkFaayrm8XYgXTvway4Rxt6ZBedt7sB4Z36A9c"
 
+[programs.devnet]
+mint_spl_29 = "5wrfmBvkFaayrm8XYgXTvway4Rxt6ZBedt7sB4Z36A9c"
+
 [registry]
 url = "https://api.apr.dev"
 
