@@ -1,0 +1,1 @@
+solana create-stake-account --from stake-account.json 3.5 --stake-authority --withdraw-authority /Users/lmqrd/.config/solana/id.json --fee-payer /Users/lmqrd/.config/solana/id.json 
